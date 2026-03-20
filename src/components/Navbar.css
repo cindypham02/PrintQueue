@@ -1,0 +1,53 @@
+/* Navbar container */
+.navbar {
+  width: 100%;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  border-bottom: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+/* Logo */
+.navbar-logo img {
+  height: 40px;
+  width: auto;
+  cursor: pointer;
+}
+
+/* Links container */
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* space between multiple links if you add more */
+}
+
+/* Individual link with icon */
+.navbar-links a {
+  display: flex;
+  align-items: center; 
+  gap: 6px;            /* spacing between text and icon */
+  text-decoration: none;
+  color: #F29422;
+  font-size: 16px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* Responsive adjustments for small screens */
+@media (max-width: 500px) {
+  .navbar {
+    padding: 10px 15px;
+  }
+  .navbar-logo img {
+    height: 35px;
+  }
+  .navbar-links a {
+    font-size: 14px;
+  }
+  .navbar-links a svg {
+    font-size: 16px;
+  }
+}

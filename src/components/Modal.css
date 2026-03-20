@@ -1,0 +1,122 @@
+/* Modal overlay */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.25s ease;
+}
+
+/* Modal content box */
+.modal-content {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  transform: scale(0.95);
+  animation: scaleIn 0.25s forwards;
+}
+
+/* Modal header */
+.modal-content h2 {
+  margin-top: 0;
+  color: #5FB6D9;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+/* Modal body */
+.modal-body {
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Buttons container */
+.modal-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+/* Default modal button */
+.save-exit-button {
+  background-color: #8DBF41; /* green */
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+
+.save-exit-button:hover {
+  background-color: #76a32f;
+  transform: scale(1.05);
+}
+
+/* Cancel button style */
+.cancel-button {
+  background-color: #5FB6D9; /* blue */
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.cancel-button:hover {
+  background-color: #3fa3c9;
+  transform: scale(1.05);
+}
+
+/* Delete button style */
+.delete-button {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.delete-button:hover {
+  background-color: #d67d1a;
+  transform: scale(1.05);
+}
+
+/* Optional: Input fields in modal */
+.modal-content input {
+  width: 100%;
+  padding: 6px 8px;
+  margin: 6px 0 12px 0;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+/* ✅ Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}

@@ -1,0 +1,116 @@
+/* Container styling */
+.create-post-container {
+  padding: 30px;
+  max-width: 600px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading */
+.create-post-container h1 {
+  text-align: center;
+  color: #5FB6D9; /* Blue */
+  margin-bottom: 20px;
+  font-size: 28px;
+}
+
+/* Form */
+.create-post-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.create-post-form label {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  color: #555;
+}
+
+/* Inputs */
+.create-post-form input[type="text"],
+.create-post-form input[type="email"],
+.create-post-form input[type="tel"],
+.create-post-form input[type="datetime-local"],
+.create-post-form input[type="number"] {
+  padding: 8px 10px;
+  margin-top: 4px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.create-post-form input[type="checkbox"] {
+  margin-top: 10px;
+  width: 20px;
+  height: 20px;
+}
+
+/* Plates section */
+.plates-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.plate-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.plate-row input[type="text"] {
+  flex: 1;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* Add Plate Button */
+.add-plate-button {
+  background-color: #5FB6D9; /* Blue */
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.add-plate-button:hover {
+  background-color: #3a9ecf;
+  transform: scale(1.05);
+}
+
+/* Submit Button */
+.submit-button {
+  margin-top: 15px;
+  padding: 10px 16px;
+  background-color: #F29422; /* Orange */
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.submit-button:hover {
+  background-color: #d67d1a;
+  transform: scale(1.02);
+}
+
+/* Input focus */
+.create-post-form input:focus {
+  outline: none;
+  border-color: #8DBF41; /* Green accent */
+  box-shadow: 0 0 4px #8DBF41;
+}

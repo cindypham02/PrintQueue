@@ -1,0 +1,123 @@
+/* Container */
+.home-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+.home-container h1 {
+  text-align: center;
+  color: #5FB6D9;
+  margin-bottom: 20px;
+}
+
+/* Tickets grid */
+.tickets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+/* Ticket cards */
+.ticket-card {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-top: 5px solid #8DBF41;
+}
+
+.ticket-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.ticket-card h2 {
+  margin-top: 0;
+  color: #5FB6D9;
+}
+
+.ticket-card p {
+  margin: 6px 0;
+  color: #333;
+}
+
+.ticket-card strong {
+  color: #F29422;
+}
+
+/* Action buttons inside ticket card */
+.card-actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+}
+
+.card-actions button {
+  flex: 1;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #fff;
+  transition: transform 0.15s ease, opacity 0.2s ease;
+}
+
+/* Edit button */
+.card-actions button:first-child {
+  background-color: #5FB6D9;
+}
+
+.card-actions button:first-child:hover {
+  background-color: #3fa3c9;
+  transform: scale(1.05);
+}
+
+/* Delete button */
+.card-actions button:last-child {
+  background-color: red;
+}
+
+.card-actions button:last-child:hover {
+  background-color: #d67d1a;
+  transform: scale(1.05);
+}
+
+/* Optional: billed highlight */
+.ticket-card p:last-of-type {
+  font-weight: bold;
+  color: #8DBF41;
+}
+
+/* Plate tracking inside ticket cards */
+.plates-status {
+  display: flex;
+  flex-direction: column;
+  margin-top: 5px;
+}
+
+.plate-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 2px 0;
+}
+
+.plate-status span.done {
+  color: #8DBF41;
+  font-weight: bold;
+}
+
+.plate-status span.printing {
+  color: #F29422;
+  font-weight: bold;
+}
+
+.plate-status input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
