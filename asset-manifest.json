@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/cindypham02/PrintQueue/static/css/main.5664415f.css",
+    "main.js": "/cindypham02/PrintQueue/static/js/main.225d09ec.js",
+    "static/js/453.ec40e177.chunk.js": "/cindypham02/PrintQueue/static/js/453.ec40e177.chunk.js",
+    "static/media/logo.png": "/cindypham02/PrintQueue/static/media/logo.66e81bbe998e3a8c4071.png",
+    "index.html": "/cindypham02/PrintQueue/index.html",
+    "main.5664415f.css.map": "/cindypham02/PrintQueue/static/css/main.5664415f.css.map",
+    "main.225d09ec.js.map": "/cindypham02/PrintQueue/static/js/main.225d09ec.js.map",
+    "453.ec40e177.chunk.js.map": "/cindypham02/PrintQueue/static/js/453.ec40e177.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.5664415f.css",
+    "static/js/main.225d09ec.js"
+  ]
+}
