@@ -9,7 +9,6 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [editingTicket, setEditingTicket] = useState(null);
   const [ticketToDelete, setTicketToDelete] = useState(null);
-  const [updateSuccess, setUpdateSuccess] = useState(false);
 
   // Fetch tickets
   const fetchTickets = async () => {
@@ -44,7 +43,6 @@ function Home() {
     const { error } = await supabase.from("patron_orders").update(fields).eq("id", id);
     if (!error) {
       setEditingTicket(null);
-      setUpdateSuccess(true);
       fetchTickets();
     } else {
       alert("Failed to update ticket.");
@@ -115,7 +113,7 @@ function Home() {
           </div>
         )}
 
-        {/* ✅ Edit Ticket Modal */}
+        {/* Edit Ticket Modal */}
         {editingTicket && (
           <Modal
             title="Edit Ticket"
@@ -196,7 +194,7 @@ function Home() {
           </Modal>
         )}
 
-        {/* ✅ Delete Modal */}
+        {/* Delete Modal */}
         {ticketToDelete && (
           <Modal
             title="Confirm Delete"
@@ -207,17 +205,6 @@ function Home() {
             ]}
           >
             <p>Are you sure you want to delete the ticket for <strong>{ticketToDelete.patron_name}</strong>?</p>
-          </Modal>
-        )}
-
-        {/* ✅ Update Success Modal */}
-        {updateSuccess && (
-          <Modal
-            title="Ticket Updated!"
-            onClose={() => setUpdateSuccess(false)}
-            buttons={[{ label: "OK", className: "save-exit-button", onClick: () => setUpdateSuccess(false) }]}
-          >
-            <p>The ticket has been successfully updated.</p>
           </Modal>
         )}
 
