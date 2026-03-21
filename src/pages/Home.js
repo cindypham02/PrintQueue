@@ -1,6 +1,8 @@
+// src/pages/Home.js
 import React, { useEffect, useState } from "react"; 
 import Navbar from "../components/Navbar";
 import Modal from "../components/Modal"; 
+import Footer from "../components/Footer"; 
 import { supabase } from "../supabaseClient";
 import "./Home.css";
 
@@ -209,6 +211,9 @@ function Home() {
         )}
 
       </div>
+
+      {/* Footer */}
+      <Footer />
     </>
   );
 }
