@@ -1,40 +1,42 @@
-/* Page Container */
+/* Reset + full height */
 html, body, #root {
-  height: 100%;
+  min-height: 100vh;
   margin: 0;
 }
 
-/* Page vertical flex layout */
+/* Page layout */
 .home-page {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* full screen */
+  min-height: 100vh;
 }
 
-/* Main content fills remaining space above footer */
+/* Main container */
 .home-container {
   flex: 1;
+  width: 100%; /* ✅ full width */
   padding: 20px;
-  max-width: 1200px;
-  margin: 0; /* remove auto centering */
+  box-sizing: border-box;
+
+  /* ✅ ADDED so content doesn't get hidden behind fixed footer */
+  padding-bottom: 80px;
 }
 
-/* Headings */
+/* Heading */
 .home-container h1 {
   text-align: center;
   color: #5FB6D9;
   margin-bottom: 20px;
 }
 
-/* Tickets grid */
+/* GRID — this is what fixes your rows */
 .tickets-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* ✅ rows that fill space */
   gap: 16px;
-  justify-items: start; /* left-align grid items */
 }
 
-/* Ticket cards */
+/* Ticket card */
 .ticket-card {
   background-color: #f9f9f9;
   border-radius: 10px;
@@ -44,11 +46,13 @@ html, body, #root {
   border-top: 5px solid #8DBF41;
 }
 
+/* Hover effect */
 .ticket-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
 
+/* Text styles */
 .ticket-card h2 {
   margin-top: 0;
   color: #5FB6D9;
@@ -63,7 +67,7 @@ html, body, #root {
   color: #F29422;
 }
 
-/* Action buttons inside ticket card */
+/* Action buttons */
 .card-actions {
   margin-top: 12px;
   display: flex;
@@ -101,13 +105,7 @@ html, body, #root {
   transform: scale(1.05);
 }
 
-/* billed highlight */
-.ticket-card p:last-of-type {
-  font-weight: bold;
-  color: #8DBF41;
-}
-
-/* Plate tracking inside ticket cards */
+/* Plates section */
 .plates-status {
   display: flex;
   flex-direction: column;
@@ -135,4 +133,19 @@ html, body, #root {
   width: 16px;
   height: 16px;
   cursor: pointer;
+}
+
+/* ✅ ADDED: Fixed footer always visible */
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+
+  /* optional styling */
+  background-color: white;
+  border-top: 1px solid #ddd;
+  padding: 15px;
+  text-align: center;
 }
