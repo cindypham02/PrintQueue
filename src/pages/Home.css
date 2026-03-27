@@ -1,11 +1,25 @@
-/* Container */
-.home-container {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-  font-family: Arial, sans-serif;
+/* Page Container */
+html, body, #root {
+  height: 100%;
+  margin: 0;
 }
 
+/* Page vertical flex layout */
+.home-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* full screen */
+}
+
+/* Main content fills remaining space above footer */
+.home-container {
+  flex: 1;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0; /* remove auto centering */
+}
+
+/* Headings */
 .home-container h1 {
   text-align: center;
   color: #5FB6D9;
@@ -17,6 +31,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 16px;
+  justify-items: start; /* left-align grid items */
 }
 
 /* Ticket cards */
@@ -86,7 +101,7 @@
   transform: scale(1.05);
 }
 
-/* Optional: billed highlight */
+/* billed highlight */
 .ticket-card p:last-of-type {
   font-weight: bold;
   color: #8DBF41;
