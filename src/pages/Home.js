@@ -16,9 +16,26 @@ function Home() {
     setLoading(true);
     const { data, error } = await supabase
       .from("patron_orders")
-      .select(
-        "id, patron_name, patron_email, patron_phone, pickup_datetime, staff_name, file_location, total_cost, billed, plate_1, plate_2, plate_3, plate_4, plate_1_done, plate_2_done, plate_3_done, plate_4_done"
-      )
+      .select(`
+        id,
+        patron_name,
+        patron_email,
+        patron_phone,
+        pickup_datetime,
+        staff_name,
+        file_location,
+        upload_file,
+        total_cost,
+        billed,
+        plate_1,
+        plate_2,
+        plate_3,
+        plate_4,
+        plate_1_done,
+        plate_2_done,
+        plate_3_done,
+        plate_4_done
+      `)
       .order("pickup_datetime", { ascending: true });
 
     if (!error) setTickets(data || []);
@@ -30,18 +47,23 @@ function Home() {
     fetchTickets();
   }, []);
 
-  // Delete a ticket
+  // Delete
   const handleDelete = async (id) => {
     const { error } = await supabase.from("patron_orders").delete().eq("id", id);
     if (!error) fetchTickets();
     setTicketToDelete(null);
   };
 
-  // Update a ticket
+  // Update
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     const { id, ...fields } = editingTicket;
-    const { error } = await supabase.from("patron_orders").update(fields).eq("id", id);
+
+    const { error } = await supabase
+      .from("patron_orders")
+      .update(fields)
+      .eq("id", id);
+
     if (!error) {
       setEditingTicket(null);
       fetchTickets();
@@ -50,12 +72,13 @@ function Home() {
     }
   };
 
-  // Toggle plate status
+  // Toggle plate done
   const togglePlateDone = async (ticketId, plateField, currentValue) => {
     const { error } = await supabase
       .from("patron_orders")
       .update({ [plateField]: !currentValue })
       .eq("id", ticketId);
+
     if (!error) fetchTickets();
   };
 
@@ -75,27 +98,69 @@ function Home() {
             {tickets.map((ticket) => (
               <div key={ticket.id} className="ticket-card">
                 <h2>{ticket.patron_name}</h2>
+
                 <p><strong>Email:</strong> {ticket.patron_email}</p>
                 <p><strong>Phone:</strong> {ticket.patron_phone || "N/A"}</p>
-                <p><strong>Pickup:</strong> {new Date(ticket.pickup_datetime).toLocaleString()}</p>
+                <p>
+                  <strong>Pickup:</strong>{" "}
+                  {new Date(ticket.pickup_datetime).toLocaleString()}
+                </p>
                 <p><strong>Staff:</strong> {ticket.staff_name || "N/A"}</p>
-                <p><strong>File Location:</strong> {ticket.file_location || "N/A"}</p>
-                <p><strong>Total Cost:</strong> {ticket.total_cost ? `$${ticket.total_cost}` : "N/A"}</p>
-                <p><strong>Billed:</strong> {ticket.billed ? "Yes" : "No"}</p>
-                
+
+                {/* 📁 FLASH DRIVE LOCATION */}
+                <p>
+                  <strong>File Location:</strong>{" "}
+                  {ticket.file_location || "N/A"}
+                </p>
+
+                {/* 📎 UPLOADED FILE */}
+                <p>
+                  <strong>Uploaded File:</strong>{" "}
+                  {ticket.upload_file ? (
+                    <a
+                      href={ticket.upload_file}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      View / Download
+                    </a>
+                  ) : (
+                    "N/A"
+                  )}
+                </p>
+
+                <p>
+                  <strong>Total Cost:</strong>{" "}
+                  {ticket.total_cost ? `$${ticket.total_cost}` : "N/A"}
+                </p>
+
+                <p>
+                  <strong>Billed:</strong>{" "}
+                  {ticket.billed ? "Yes" : "No"}
+                </p>
+
+                {/* PLATES */}
                 <div>
                   <strong>Plates:</strong>
                   <div className="plates-status">
-                    {[1,2,3,4].map((i) => {
+                    {[1, 2, 3, 4].map((i) => {
                       const plateName = ticket[`plate_${i}`];
                       const plateDone = ticket[`plate_${i}_done`];
+
                       if (!plateName) return null;
+
                       return (
                         <div key={i} className="plate-status">
                           <input
                             type="checkbox"
                             checked={plateDone || false}
-                            onChange={() => togglePlateDone(ticket.id, `plate_${i}_done`, plateDone)}
+                            onChange={() =>
+                              togglePlateDone(
+                                ticket.id,
+                                `plate_${i}_done`,
+                                plateDone
+                              )
+                            }
                           />
                           <span className={plateDone ? "done" : "printing"}>
                             {plateName} {plateDone ? "(Done)" : "(Printing)"}
@@ -107,22 +172,34 @@ function Home() {
                 </div>
 
                 <div className="card-actions">
-                  <button onClick={() => setEditingTicket(ticket)}>Edit</button>
-                  <button onClick={() => setTicketToDelete(ticket)}>Delete</button>
+                  <button onClick={() => setEditingTicket(ticket)}>
+                    Edit
+                  </button>
+                  <button onClick={() => setTicketToDelete(ticket)}>
+                    Delete
+                  </button>
                 </div>
               </div>
             ))}
           </div>
         )}
 
-        {/* Edit Modal */}
+        {/* EDIT MODAL */}
         {editingTicket && (
           <Modal
             title="Edit Ticket"
             onClose={() => setEditingTicket(null)}
             buttons={[
-              { label: "Save and Exit", className: "save-exit-button", onClick: handleEditSubmit },
-              { label: "Cancel", className: "cancel-button", onClick: () => setEditingTicket(null) },
+              {
+                label: "Save and Exit",
+                className: "save-exit-button",
+                onClick: handleEditSubmit,
+              },
+              {
+                label: "Cancel",
+                className: "cancel-button",
+                onClick: () => setEditingTicket(null),
+              },
             ]}
           >
             <form className="create-post-form">
@@ -130,65 +207,164 @@ function Home() {
                 <input
                   type="text"
                   value={editingTicket.patron_name}
-                  onChange={(e) => setEditingTicket({ ...editingTicket, patron_name: e.target.value })}
+                  onChange={(e) =>
+                    setEditingTicket({
+                      ...editingTicket,
+                      patron_name: e.target.value,
+                    })
+                  }
                 />
               </label>
+
               <label>Patron Email
                 <input
                   type="email"
                   value={editingTicket.patron_email}
-                  onChange={(e) => setEditingTicket({ ...editingTicket, patron_email: e.target.value })}
+                  onChange={(e) =>
+                    setEditingTicket({
+                      ...editingTicket,
+                      patron_email: e.target.value,
+                    })
+                  }
                 />
               </label>
+
               <label>Patron Phone
                 <input
                   type="tel"
                   value={editingTicket.patron_phone}
-                  onChange={(e) => setEditingTicket({ ...editingTicket, patron_phone: e.target.value })}
+                  onChange={(e) =>
+                    setEditingTicket({
+                      ...editingTicket,
+                      patron_phone: e.target.value,
+                    })
+                  }
                 />
               </label>
+
               <label>Pickup Date/Time
                 <input
                   type="datetime-local"
                   value={editingTicket.pickup_datetime.slice(0, 16)}
-                  onChange={(e) => setEditingTicket({ ...editingTicket, pickup_datetime: e.target.value })}
+                  onChange={(e) =>
+                    setEditingTicket({
+                      ...editingTicket,
+                      pickup_datetime: e.target.value,
+                    })
+                  }
                 />
               </label>
+
               <label>Staff Name
                 <input
                   type="text"
                   value={editingTicket.staff_name}
-                  onChange={(e) => setEditingTicket({ ...editingTicket, staff_name: e.target.value })}
+                  onChange={(e) =>
+                    setEditingTicket({
+                      ...editingTicket,
+                      staff_name: e.target.value,
+                    })
+                  }
                 />
               </label>
+
               <label>File Location
                 <input
                   type="text"
-                  value={editingTicket.file_location}
-                  onChange={(e) => setEditingTicket({ ...editingTicket, file_location: e.target.value })}
+                  value={editingTicket.file_location || ""}
+                  onChange={(e) =>
+                    setEditingTicket({
+                      ...editingTicket,
+                      file_location: e.target.value,
+                    })
+                  }
                 />
               </label>
+
+              {/* 📎 VIEW CURRENT FILE */}
+              <label>Uploaded File</label>
+              {editingTicket.upload_file ? (
+                <div style={{ marginBottom: "10px" }}>
+                  <a
+                    href={editingTicket.upload_file}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    View Current File
+                  </a>
+                </div>
+              ) : (
+                <p style={{ fontSize: "12px" }}>No file uploaded</p>
+              )}
+
+              {/* 📁 REPLACE FILE */}
+              <label>Replace File</label>
+              <input
+                type="file"
+                onChange={async (e) => {
+                  const file = e.target.files[0];
+                  if (!file) return;
+
+                  const filePath = `uploads/${Date.now()}_${file.name}`;
+
+                  const { error: uploadError } = await supabase.storage
+                    .from("uploads")
+                    .upload(filePath, file);
+
+                  if (uploadError) {
+                    alert("Upload failed");
+                    return;
+                  }
+
+                  const { data } = supabase.storage
+                    .from("uploads")
+                    .getPublicUrl(filePath);
+
+                  setEditingTicket({
+                    ...editingTicket,
+                    upload_file: data.publicUrl,
+                  });
+                }}
+              />
+
               <label>Total Cost
                 <input
                   type="number"
                   value={editingTicket.total_cost}
-                  onChange={(e) => setEditingTicket({ ...editingTicket, total_cost: e.target.value })}
+                  onChange={(e) =>
+                    setEditingTicket({
+                      ...editingTicket,
+                      total_cost: e.target.value,
+                    })
+                  }
                 />
               </label>
+
               <label>Billed
                 <input
                   type="checkbox"
                   checked={editingTicket.billed}
-                  onChange={(e) => setEditingTicket({ ...editingTicket, billed: e.target.checked })}
+                  onChange={(e) =>
+                    setEditingTicket({
+                      ...editingTicket,
+                      billed: e.target.checked,
+                    })
+                  }
                 />
               </label>
+
               <label>Plates:</label>
-              {[1,2,3,4].map((i) => (
+              {[1, 2, 3, 4].map((i) => (
                 <input
                   key={i}
                   type="text"
                   value={editingTicket[`plate_${i}`] || ""}
-                  onChange={(e) => setEditingTicket({ ...editingTicket, [`plate_${i}`]: e.target.value })}
+                  onChange={(e) =>
+                    setEditingTicket({
+                      ...editingTicket,
+                      [`plate_${i}`]: e.target.value,
+                    })
+                  }
                   placeholder={`Plate ${i}`}
                 />
               ))}
@@ -196,17 +372,28 @@ function Home() {
           </Modal>
         )}
 
-        {/* Delete Modal */}
+        {/* DELETE MODAL */}
         {ticketToDelete && (
           <Modal
             title="Confirm Delete"
             onClose={() => setTicketToDelete(null)}
             buttons={[
-              { label: "Yes, Delete", className: "delete-button", onClick: () => handleDelete(ticketToDelete.id) },
-              { label: "Cancel", className: "cancel-button", onClick: () => setTicketToDelete(null) },
+              {
+                label: "Yes, Delete",
+                className: "delete-button",
+                onClick: () => handleDelete(ticketToDelete.id),
+              },
+              {
+                label: "Cancel",
+                className: "cancel-button",
+                onClick: () => setTicketToDelete(null),
+              },
             ]}
           >
-            <p>Are you sure you want to delete the ticket for <strong>{ticketToDelete.patron_name}</strong>?</p>
+            <p>
+              Are you sure you want to delete the ticket for{" "}
+              <strong>{ticketToDelete.patron_name}</strong>?
+            </p>
           </Modal>
         )}
       </div>

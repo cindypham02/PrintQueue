@@ -19,6 +19,7 @@ function CreateTicket() {
   });
 
   const [plates, setPlates] = useState([""]);
+  const [file, setFile] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -42,45 +43,83 @@ function CreateTicket() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    let uploadUrl = null;
+
+    // Upload file to Supabase Storage
+    if (file) {
+      const fileName = `${Date.now()}-${file.name}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("ticket-files")
+        .upload(fileName, file);
+
+      if (uploadError) {
+        console.error("UPLOAD ERROR:", uploadError);
+        alert("File upload failed.");
+        return;
+      }
+
+      const { data } = supabase.storage
+        .from("ticket-files")
+        .getPublicUrl(fileName);
+
+      uploadUrl = data.publicUrl;
+    }
+
     const ticketData = {
       patron_name: formData.patron_name,
       patron_email: formData.patron_email,
       patron_phone: formData.patron_phone,
       pickup_datetime: formData.pickup_datetime,
       staff_name: formData.staff_name,
+
+      // 📌 Flash drive path (manual input)
       file_location: formData.file_location,
-      total_cost: formData.total_cost,
+
+      // 📌 Uploaded file (goes to your DB column)
+      upload_file: uploadUrl,
+
+      total_cost: parseFloat(formData.total_cost),
       billed: formData.billed,
+
       plate_1: plates[0] || "",
       plate_2: plates[1] || "",
       plate_3: plates[2] || "",
       plate_4: plates[3] || "",
     };
 
-    const { error } = await supabase
+    console.log("Submitting ticket:", ticketData);
+
+    const { data, error } = await supabase
       .from("patron_orders")
-      .insert([ticketData]);
+      .insert([ticketData])
+      .select();
+
+    console.log("INSERT RESPONSE:", data);
+    console.log("INSERT ERROR:", error);
 
     if (error) {
       console.error("Error creating ticket:", error);
-      alert("Failed to create ticket. Check console for details.");
-    } else {
-      // Reset form
-      setFormData({
-        patron_name: "",
-        patron_email: "",
-        patron_phone: "",
-        pickup_datetime: "",
-        staff_name: "",
-        file_location: "",
-        total_cost: "",
-        billed: false,
-      });
-      setPlates([""]);
-
-      // Redirect to home page
-      navigate("/");
+      alert(error.message);
+      return;
     }
+
+    // Reset form
+    setFormData({
+      patron_name: "",
+      patron_email: "",
+      patron_phone: "",
+      pickup_datetime: "",
+      staff_name: "",
+      file_location: "",
+      total_cost: "",
+      billed: false,
+    });
+
+    setPlates([""]);
+    setFile(null);
+
+    navigate("/");
   };
 
   return (
@@ -143,6 +182,7 @@ function CreateTicket() {
             />
           </label>
 
+          {/* FLASH DRIVE LOCATION */}
           <label>
             File Location
             <input
@@ -150,6 +190,15 @@ function CreateTicket() {
               name="file_location"
               value={formData.file_location}
               onChange={handleChange}
+            />
+          </label>
+
+          {/* FILE UPLOAD */}
+          <label>
+            Upload File
+            <input
+              type="file"
+              onChange={(e) => setFile(e.target.files[0])}
             />
           </label>
 

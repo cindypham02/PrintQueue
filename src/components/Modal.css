@@ -9,7 +9,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+
+  z-index: 9999; 
   animation: fadeIn 0.25s ease;
 }
 
@@ -110,7 +111,7 @@
   box-sizing: border-box;
 }
 
-/* ✅ Animations */
+/* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
