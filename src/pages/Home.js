@@ -59,13 +59,20 @@ function Home() {
     e.preventDefault();
     const { id, ...fields } = editingTicket;
 
+    // ✅ Remove newFileUrl handling
+    const updatedFields = {
+      ...fields,
+      // upload_file: newFileUrl || editingTicket.upload_file, // removed
+    };
+
     const { error } = await supabase
       .from("patron_orders")
-      .update(fields)
+      .update(updatedFields)
       .eq("id", id);
 
     if (!error) {
       setEditingTicket(null);
+      // setNewFileUrl(null); // removed
       fetchTickets();
     } else {
       alert("Failed to update ticket.");
@@ -107,13 +114,11 @@ function Home() {
                 </p>
                 <p><strong>Staff:</strong> {ticket.staff_name || "N/A"}</p>
 
-                {/* 📁 FLASH DRIVE LOCATION */}
                 <p>
                   <strong>File Location:</strong>{" "}
                   {ticket.file_location || "N/A"}
                 </p>
 
-                {/* 📎 UPLOADED FILE */}
                 <p>
                   <strong>Uploaded File:</strong>{" "}
                   {ticket.upload_file ? (
@@ -139,7 +144,6 @@ function Home() {
                   {ticket.billed ? "Yes" : "No"}
                 </p>
 
-                {/* PLATES */}
                 <div>
                   <strong>Plates:</strong>
                   <div className="plates-status">
@@ -184,7 +188,6 @@ function Home() {
           </div>
         )}
 
-        {/* EDIT MODAL */}
         {editingTicket && (
           <Modal
             title="Edit Ticket"
@@ -281,52 +284,6 @@ function Home() {
                 />
               </label>
 
-              {/* 📎 VIEW CURRENT FILE */}
-              <label>Uploaded File</label>
-              {editingTicket.upload_file ? (
-                <div style={{ marginBottom: "10px" }}>
-                  <a
-                    href={editingTicket.upload_file}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    View Current File
-                  </a>
-                </div>
-              ) : (
-                <p style={{ fontSize: "12px" }}>No file uploaded</p>
-              )}
-
-              {/* 📁 REPLACE FILE */}
-              <label>Replace File</label>
-              <input
-                type="file"
-                onChange={async (e) => {
-                  const file = e.target.files[0];
-                  if (!file) return;
-
-                  const filePath = `uploads/${Date.now()}_${file.name}`;
-
-                  const { error: uploadError } = await supabase.storage
-                    .from("uploads")
-                    .upload(filePath, file);
-
-                  if (uploadError) {
-                    alert("Upload failed");
-                    return;
-                  }
-
-                  const { data } = supabase.storage
-                    .from("uploads")
-                    .getPublicUrl(filePath);
-
-                  setEditingTicket({
-                    ...editingTicket,
-                    upload_file: data.publicUrl,
-                  });
-                }}
-              />
-
               <label>Total Cost
                 <input
                   type="number"
@@ -372,7 +329,6 @@ function Home() {
           </Modal>
         )}
 
-        {/* DELETE MODAL */}
         {ticketToDelete && (
           <Modal
             title="Confirm Delete"
