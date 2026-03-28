@@ -120,14 +120,15 @@ function Home() {
                 </p>
 
                 <p>
-                  <strong>Uploaded File:</strong>{" "}
+                  <strong>3D Print File:</strong>{" "}
                   {ticket.upload_file ? (
                     <a
                       href={ticket.upload_file}
                       target="_blank"
                       rel="noreferrer"
+                      className="file-link"
                     >
-                      View / Download
+                    Download
                     </a>
                   ) : (
                     "N/A"
